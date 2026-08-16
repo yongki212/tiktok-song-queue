@@ -5,6 +5,13 @@
 <script>
 const playlistID = "PLfGhxOCnZYFw";
   const apiKey = "AIzaSyBkAjZWqJ0vFnkqpeB66S4qqH46VYP-Y7U";
+  fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${playlistID}&key=${apiKey}`)
+  .then(response => response.json())
+  .then(data => {
+    data.items.forEach((item, index) => {
+      document.body.innerHTML += `${index + 1}. ${item.snippet.title}<br>`;
+    });
+  });
   Create API key
 Name 
 API key 1
