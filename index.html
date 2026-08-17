@@ -33,7 +33,7 @@ h1 {
 <div id="queue"></div>
 
 <script>
-fetch("playlist.txt")
+fetch("playlist.txt?t=" + Date.now(), {cache: "no-store"})
   .then(response => response.text())
   .then(text => {
     const songs = text.trim().split(/\r?\n/);
