@@ -33,6 +33,22 @@ h1 {
 <div id="queue"></div>
 
 <script>
+function getYoutubeId(url) {
+  try {
+    const u = new URL(url);
+
+    if (u.hostname.includes("youtu.be")) {
+      return u.pathname.substring(1);
+    }
+
+    if (u.hostname.includes("youtube.com")) {
+      return u.searchParams.get("v");
+    }
+  } catch (e) {}
+
+  return null;
+}
+
 function loadPlaylist() {
   fetch("playlist.txt?t=" + Date.now(), {cache: "no-store"})
     .then(response => response.text())
@@ -42,12 +58,30 @@ function loadPlaylist() {
 
       queue.innerHTML = "";
 
-      songs.forEach((song, index) => {
+      songs.forEach((line, index) => {
+        const parts = line.split("|");
+        const title = parts[0].trim();
+        const youtubeUrl = parts[1] ? parts[1].trim() : "";
+        const videoId = getYoutubeId(youtubeUrl);
+
         const item = document.createElement("div");
         item.className = "song";
+
+        let cover = "";
+
+        if (videoId) {
+          cover =
+            '<img src="https://img.youtube.com/vi/' +
+            videoId +
+            '/hqdefault.jpg" ' +
+            'style="width:70px;height:50px;object-fit:cover;border-radius:8px;margin-right:15px;vertical-align:middle;">';
+        }
+
         item.innerHTML =
           '<span class="number">#' + (index + 1) + '</span>' +
-          song;
+          cover +
+          title;
+
         queue.appendChild(item);
       });
     });
