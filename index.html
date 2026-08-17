@@ -33,21 +33,28 @@ h1 {
 <div id="queue"></div>
 
 <script>
-fetch("playlist.txt?t=" + Date.now(), {cache: "no-store"})
-  .then(response => response.text())
-  .then(text => {
-    const songs = text.trim().split(/\r?\n/);
-    const queue = document.getElementById("queue");
+function loadPlaylist() {
+  fetch("playlist.txt?t=" + Date.now(), {cache: "no-store"})
+    .then(response => response.text())
+    .then(text => {
+      const songs = text.trim().split(/\r?\n/);
+      const queue = document.getElementById("queue");
 
-    songs.forEach((song, index) => {
-      const item = document.createElement("div");
-      item.className = "song";
-      item.innerHTML =
-        '<span class="number">#' + (index + 1) + '</span>' +
-        song;
-      queue.appendChild(item);
+      queue.innerHTML = "";
+
+      songs.forEach((song, index) => {
+        const item = document.createElement("div");
+        item.className = "song";
+        item.innerHTML =
+          '<span class="number">#' + (index + 1) + '</span>' +
+          song;
+        queue.appendChild(item);
+      });
     });
-  });
+}
+
+loadPlaylist();
+setInterval(loadPlaylist, 10000);
 </script>
 
 </body>
